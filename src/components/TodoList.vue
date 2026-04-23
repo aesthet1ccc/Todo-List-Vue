@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, Teleport } from "vue";
+import { computed, ref, Teleport, TransitionGroup } from "vue";
 import style from "./TodoList.module.scss";
 
 import Modal from "./Modal/Modal.vue";
@@ -43,6 +43,18 @@ const saveUpdatedTask = (newText: string) => {
 
   isModalOpen.value = false;
 };
+
+const sortedTodos = computed(() => {
+  return [...todos.value].sort((a, b) => Number(a.done) - Number(b.done));
+});
+
+const countDoneTodo = computed(() => {
+  return todos.value.filter((todo) => todo.done).length;
+});
+
+const countTodos = computed(() => {
+  return todos.value.filter((todo) => !todo.done).length;
+});
 </script>
 
 <template>
@@ -52,22 +64,46 @@ const saveUpdatedTask = (newText: string) => {
     <h1 :class="style.header_title">Todo List</h1>
   </header>
   <section :class="style.section_addItem">
-    <input placeholder="Впишите задачу" v-model="inputValue" required />
+    <input
+      placeholder="Впишите задачу"
+      v-model="inputValue"
+      required
+      @keyup.enter="addTodoItem"
+    />
     <button @click="addTodoItem">Добавить задачу</button>
   </section>
   <section :class="style.section_todoItems">
+    <section :class="style.counter_todos_block">
+      <h2>Задач в работе: {{ countTodos }}</h2>
+      <h2>Выполненные задачи: {{ countDoneTodo }}</h2>
+    </section>
     <h2>Список задач</h2>
-    <ul :class="style.listItems">
-      <div v-for="todo in todos" :key="todo.id" :class="style.section_item">
+    <TransitionGroup tag="ul" name="list" :class="style.listItems">
+      <div
+        v-for="todo in sortedTodos"
+        :key="todo.id"
+        :class="style.section_item"
+      >
         <li :class="style.listItem">
-          <p :class="style.todo_text">{{ todo.id + 1 }}) {{ todo.text }}</p>
+          <p :class="style.todo_text">
+            <input
+              type="checkbox"
+              :class="style.todo_checkbox"
+              v-model="todo.done"
+            />
+            <span :class="{ [style.todo_isDone]: todo.done }">
+              {{ todo.text }}
+            </span>
+          </p>
           <div :class="style.item_buttons">
-            <button @click="updateTodoItem(todo)">Изменить</button>
+            <button @click="updateTodoItem(todo)" :disabled="todo.done">
+              Изменить
+            </button>
             <button @click="removeTodoItem(todo)">Удалить</button>
           </div>
         </li>
       </div>
-    </ul>
+    </TransitionGroup>
   </section>
   <Teleport to="body">
     <Modal

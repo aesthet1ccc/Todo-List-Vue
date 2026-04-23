@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { nextTick, onMounted, ref, watch } from "vue";
 import style from "./Modal.module.scss";
 
 const props = defineProps({
@@ -26,6 +26,11 @@ const handleClose = () => {
 };
 
 const inputModalValue = ref<string>(props.inputValue);
+const inputRef = ref<HTMLInputElement | null>(null);
+
+onMounted(() => {
+  inputRef.value?.focus();
+});
 </script>
 <template>
   <div :class="style.modal_overlay">
@@ -35,6 +40,9 @@ const inputModalValue = ref<string>(props.inputValue);
         v-model="inputModalValue"
         :class="style.modal_input"
         placeholder="Введите новое название..."
+        @keyup.enter="handleAccept"
+        @keyup.esc="handleClose"
+        ref="inputRef"
       />
 
       <div :class="style.modal_actions">

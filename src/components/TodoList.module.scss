@@ -59,6 +59,7 @@
   }
   .listItems {
     list-style-type: none;
+    padding-bottom: 20px;
 
     margin: 0 250px 0 250px;
 
@@ -79,6 +80,18 @@
 
         .todo_text {
           font-size: 20px;
+          display: flex;
+          align-items: center;
+          gap: 15px;
+          .todo_isDone {
+            text-decoration: line-through;
+          }
+          .todo_checkbox {
+            margin: 0;
+            padding: 0;
+            width: 20px;
+            height: 20px;
+          }
         }
 
         .item_buttons {
@@ -104,6 +117,15 @@
           }
         }
       }
+    }
+  }
+  .counter_todos_block {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    border-top: 1px solid var(--border);
+    h2 {
+      border: none;
     }
   }
 }

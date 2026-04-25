@@ -11,7 +11,9 @@ interface Todos {
   done: boolean;
 }
 
-const todos = ref<Todos[]>([]);
+// const todos = ref<Todos[]>([]);
+const todos = useLocalStorage<Todos[]>("todos", []);
+
 const inputValue = ref<string>("");
 const id = ref<number>(0);
 const isModalOpen = ref<boolean>(false);
@@ -27,6 +29,10 @@ const addTodoItem = () => {
 
 const removeTodoItem = (todo: Todos) => {
   todos.value = todos.value.filter((t) => t.id !== todo.id);
+};
+
+const clearTodos = () => {
+  todos.value = [];
 };
 
 const updateTodoItem = (todo: Todos) => {
@@ -56,8 +62,6 @@ const countDoneTodo = computed(() => {
 const countTodos = computed(() => {
   return todos.value.filter((todo) => !todo.done).length;
 });
-
-const storageRef = useLocalStorage("todos", todos);
 </script>
 
 <template>
@@ -107,6 +111,13 @@ const storageRef = useLocalStorage("todos", todos);
         </li>
       </div>
     </TransitionGroup>
+    <button
+      @click="clearTodos"
+      v-if="todos.length > 0"
+      :class="style.clearTodos_button"
+    >
+      Удалить все задачи
+    </button>
   </section>
   <Teleport to="body">
     <Modal

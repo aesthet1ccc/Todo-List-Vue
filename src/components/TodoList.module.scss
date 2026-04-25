@@ -128,4 +128,20 @@
       border: none;
     }
   }
+
+  .clearTodos_button {
+    border-radius: 8px;
+    text-align: center;
+    font-size: 16px;
+    width: 200px;
+    height: 40px;
+    border: none;
+    transition: transform 0.3s ease;
+
+    margin-bottom: 50px;
+    &:hover {
+      transform: scale(1.1);
+      border: 1px solid white;
+    }
+  }
 }

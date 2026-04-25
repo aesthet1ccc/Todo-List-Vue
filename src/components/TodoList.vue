@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, ref, Teleport, TransitionGroup } from "vue";
+import { useLocalStorage } from "@vueuse/core";
 import style from "./TodoList.module.scss";
 
 import Modal from "./Modal/Modal.vue";
@@ -55,6 +56,8 @@ const countDoneTodo = computed(() => {
 const countTodos = computed(() => {
   return todos.value.filter((todo) => !todo.done).length;
 });
+
+const storageRef = useLocalStorage("todos", todos);
 </script>
 
 <template>
